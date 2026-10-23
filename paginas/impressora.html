@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressora - Lab. Logística IFES</title>
+    <style>
+        :root {
+            /* Cores importadas do Index Original */
+            --cor1: #32A041; /* RGB: 50, 160, 65 - Maincolor */
+            --cor2: #64C878; /* RGB: 100, 200, 120 - Tom claro de maincolor */
+            --cor3: #1E7832; /* RGB: 30, 120, 50 - Tom escuro de maincolor */
+            --cor4: #46B45A; /* RGB: 70, 180, 90 - Tom vibrante de maincolor */
+            --cor5: #96DCA0; /* RGB: 150, 220, 160 - Tom pastel de maincolor */
+            --preto: #000000;
+            --branco: #FFFFFF;
+
+            /* Mapeamento de variáveis padrão do Index */
+            --primary-color: var(--cor1);
+            --secondary-color: var(--cor3);
+            --bg-light: #F8FAF0;
+            --text-dark: var(--preto);
+            --text-muted: #505050;
+            --border-color: #D2E8D5;
+            --sidebar-width: 280px;
+            
+            /* Cores de Status */
+            --status-operacional: var(--cor1);
+            --status-manutencao: rgb(230, 162, 0);
+            --status-inativo: rgb(180, 30, 30);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Barra Lateral (Menu Esquerdo) */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--branco);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cor1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            color: var(--cor3);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-category {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background-color: var(--cor5);
+            border: 1px solid transparent;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: var(--cor5);
+            color: var(--cor3);
+            border-color: var(--cor2);
+        }
+
+        /* Área de Conteúdo Principal */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 3rem 4rem;
+            flex: 1;
+            max-width: 1200px;
+        }
+
+	.header-section {
+            display: flex;
+            flex-direction: column; /* Força os elementos a ficarem um embaixo do outro */
+            align-items: flex-start; /* Alinha todos os elementos à esquerda */
+            gap: 0.5rem; /* Adiciona um respiro de espaço entre o título e o texto */
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--cor1);
+        }
+
+        h1 {
+            color: var(--cor3);
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;	
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            color: var(--branco);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .badge.operacional { background-color: var(--status-operacional); }
+        .badge.manutencao { background-color: var(--status-manutencao); }
+        .badge.inativo { background-color: var(--status-inativo); }
+
+        .content-card {
+            background-color: var(--branco);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .content-card h3 {
+            color: var(--cor3);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: bold;
+            color: var(--text-dark);
+            width: 35%;
+        }
+
+        td {
+            color: var(--text-muted);
+        }
+
+        /* Listas e Textos */
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .info-list {
+            list-style-position: inside;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-list.bullets li {
+            list-style-type: disc;
+        }
+
+        .info-list.numbers li {
+            list-style-type: decimal;
+        }
+
+        .bold-field {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        /* Links de Referência */
+        a.link-ref {
+            color: var(--cor3);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a.link-ref:hover {
+            text-decoration: underline;
+            color: var(--cor1);
+        }
+
+        /* Imagem */
+        .equipamento-img {
+            display: block;
+            max-width: 100%;
+            width: 350px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Rodapé de Controle */
+        .version-control {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logo-ifes {
+            max-width: 100%; /* Garante que a logo não ultrapasse a largura do menu lateral */
+            height: auto;    /* Mantém a proporção da imagem */
+            margin-bottom: 15px; /* Adiciona um respiro entre a logo e o título */
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Barra Lateral -->
+    <aside class="sidebar">
+        <img src="../figuras/ifes-horizontal-cor.png" alt="Logo Instituto Federal Espírito Santo" class="logo-ifes">
+        <div class="sidebar-header">
+            <h2>Laboratório de Logística</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html">🏠 Início / Visão Geral</a></li>
+
+            <div class="nav-category">Equipamentos e Hardware</div>
+            <li><a href="impressora.html" class="active">🖨️ Impressora</a></li>
+            <li><a href="impressora_3d.html">🖨️ Impressora 3D</a></li>
+            <li><a href="lousa_interativa.html">📺 Lousa Interativa</a></li>
+            <li><a href="oculos_vr.html">🥽 Óculos VR</a></li>
+            <li><a href="kit_lego.html">🧩 Kit LEGO</a></li>
+            <li><a href="kit_arduino.html">⚡ Kit Arduino</a></li>
+
+            <div class="nav-category">Informática</div>
+            <li><a href="computador_aluno.html">💻 PCs – Alunos</a></li>
+            <li><a href="computador_admin.html">🖥️ PCs – Administração</a></li>
+
+            <div class="nav-category">Jogos e Simulação</div>
+            <li><a href="milk_game.html">🥛 Milk Game</a></li>
+
+            <div class="nav-category">Apoio</div>
+            <li><a href="sobressalentes.html">📦 Itens Sobressalentes</a></li>
+        </ul>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        
+        <div class="header-section">
+            <h1>Impressora Multifuncional Brother MFC-8952DW <span class="badge operacional">OPERACIONAL</span></h1>
+            <span style="color: var(--text-muted);">Categoria: Impressora multifuncional monocromática a laser para impressão, cópia, digitalização e fax</span>
+        </div>
+
+        <section class="content-card">
+            <h3>Identificação Patrimonial</h3>
+            <table>
+                <tbody>
+                    <tr><th>Código Interno</th><td>IMP001</td></tr>
+                    <tr><th>Endereço Físico</th><td>M004</td></tr>
+                    <tr><th>Fornecedor</th><td>Brother</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-card">
+            <h3>1. Descrição e Finalidade</h3>
+            <p>A Brother MFC-8952DW é uma impressora multifuncional monocromática a laser destinada à impressão, cópia, digitalização e transmissão de documentos. O equipamento permite o processamento e a reprodução de documentos em diferentes formatos, contando com recursos de impressão frente e verso automática, alimentação automática de documentos e conectividade em rede. No Laboratório de Logística, pode ser empregado na impressão de relatórios, formulários, etiquetas, materiais didáticos e demais documentos relacionados às atividades de ensino, pesquisa, extensão e gestão do laboratório.</p>
+            
+            <img src="../figuras/impressora_b.jpeg" alt="Foto da Impressora Multifuncional Brother MFC-8952DW" class="equipamento-img">
+        </section>
+
+        <section class="content-card">
+            <h3>2. Especificações Técnicas</h3>
+            <table>
+                <tbody>
+                    <tr><th>Marca / Modelo</th><td>Brother / MFC-8952DW</td></tr>
+                    <tr><th>Tipo</th><td>Impressora multifuncional monocromática a laser</td></tr>
+                    <tr><th>Tecnologia de impressão</th><td>Eletrofotográfica a laser</td></tr>
+                    <tr><th>Funções</th><td>Impressão, cópia, digitalização e fax</td></tr>
+                    <tr><th>Display</th><td>Tela LCD colorida, widescreen, sensível ao toque de 5"</td></tr>
+                    <tr><th>Memória</th><td>128 MB (padrão), expansível até 256 MB via DDR2 SO-DIMM</td></tr>
+                    <tr><th>Formatos de papel</th><td>A4, Carta, B5, A5, A5 (borda longa), B6, A6, Executivo, Ofício e Fólio</td></tr>
+                    <tr><th>Gramatura da bandeja principal</th><td>60 a 105 g/m²</td></tr>
+                    <tr><th>Gramatura da bandeja multiuso</th><td>60 a 163 g/m²</td></tr>
+                    <tr><th>Cópia</th><td>Até 99 cópias; ampliação/redução de 25% a 400%</td></tr>
+                    <tr><th>Impressão direta</th><td>PDF, JPEG, TIFF, XPS e PRN</td></tr>
+                    <tr><th>Dimensões (L × A × P)</th><td>491 × 477 × 415 mm</td></tr>
+                    <tr><th>Peso</th><td>Aproximadamente 17,0 kg (com consumíveis)</td></tr>
+                    <tr><th>Alimentação elétrica</th><td>110–120 V CA, 50/60 Hz</td></tr>
+                    <tr><th>Consumo máximo</th><td>Aproximadamente 1200 W</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-card">
+            <h3>3. Guia Rápido de Operação</h3>
+            
+            <p class="bold-field">Checklist pré-uso:</p>
+            <ul class="info-list bullets">
+                <li>Verificar se o cabo de alimentação está conectado e se o equipamento está ligado à rede elétrica;</li>
+                <li>Verificar a disponibilidade de papel e se a bandeja está corretamente posicionada;</li>
+                <li>Confirmar a disponibilidade de toner e verificar se não há mensagens de erro no painel do equipamento;</li>
+                <li>Verificar se o documento ou arquivo a ser impresso está corretamente configurado.</li>
+            </ul>
+
+            <p class="bold-field">Cuidados:</p>
+            <ul class="info-list bullets">
+                <li>Não puxar folhas presas com força, seguindo o procedimento indicado pelo fabricante para remoção de atolamentos;</li>
+                <li>Não abrir compartimentos internos durante a operação, exceto quando necessário para manutenção ou substituição de suprimentos;</li>
+                <li>Manter o equipamento em superfície estável, seca e livre de objetos que possam obstruir suas áreas de ventilação;</li>
+                <li>Utilizar papel e suprimentos compatíveis com as especificações do equipamento;</li>
+                <li>Não tocar no interior do equipamento imediatamente após períodos prolongados de impressão, devido ao aquecimento de componentes internos;</li>
+                <li>Desligar o equipamento e comunicar o responsável técnico em caso de fumaça, odor de queimado, ruídos anormais ou falhas recorrentes.</li>
+            </ul>
+
+            <p class="bold-field">Passo a passo:</p>
+            <ol class="info-list numbers">
+                <li><strong>Ligar:</strong> acionar o botão de alimentação e aguardar a inicialização do equipamento até que o painel indique que a impressora está pronta.</li>
+                <li><strong>Imprimir:</strong> no computador, selecionar o documento desejado, escolher a impressora Brother MFC-8952DW e configurar as opções de impressão, como quantidade de cópias, tamanho do papel e impressão frente e verso, quando disponível.</li>
+                <li><strong>Copiar:</strong> posicionar o documento no vidro do scanner ou no alimentador automático de documentos, selecionar a função de cópia no painel e configurar a quantidade e demais parâmetros desejados.</li>
+                <li><strong>Digitalizar:</strong> posicionar o documento no vidro ou alimentador, selecionar a função de digitalização e indicar o destino do arquivo conforme a configuração do equipamento.</li>
+                <li><strong>Desligar:</strong> após concluir as atividades, verificar se não há trabalhos de impressão ou digitalização em andamento e desligar o equipamento pelo botão de alimentação.</li>
+            </ol>
+        </section>
+
+        <section class="content-card">
+            <h3>5. Manutenção e Conservação</h3>
+            
+            <p class="bold-field">Componentes Mecânicos e Estruturais</p>
+            <ul class="info-list bullets">
+                <li>Manter o equipamento livre de poeira e resíduos de papel;</li>
+                <li><strong>Superfícies e Painel:</strong> utilize um pano de microfibra seco para limpar a carcaça e o painel touchscreen. Evite produtos químicos abrasivos que possam danificar a interface de toque;</li>
+                <li><strong>Vidro de Exposição e ADF:</strong> limpe o vidro do scanner e a fina tira de vidro do Alimentador Automático de Documentos (ADF) com um pano levemente umedecido em álcool isopropílico. Isso previne o aparecimento de riscos verticais nas cópias e digitalizações;</li>
+                <li><strong>Fio de Corona:</strong> sempre que trocar o toner, limpe o fio de corona do cilindro deslizando a aba verde (no conjunto do cartucho) de ponta a ponta cerca de cinco vezes. Certifique-se de retornar a aba à sua posição inicial para evitar faixas pretas na impressão;</li>
+                <li><strong>Condições do Papel:</strong> utilize apenas papel adequado para impressão a laser. Mantenha as resmas armazenadas em local seco; papel úmido ondula ao passar pelo fusor quente, causando atolamentos e desgaste nos tracionadores;</li>
+                <li><strong>Proteção Elétrica:</strong> impressoras a laser possuem picos altos de consumo de energia durante o aquecimento inicial. Conecte o equipamento a tomadas aterradas ou a nobreaks de alta capacidade projetados para impressoras, evitando estabilizadores comuns que podem danificar a placa lógica.</li>
+            </ul>
+        </section>
+
+        <section class="content-card">
+            <h3>6. Checklist Pós-Uso</h3>
+            <p>Para o encerramento das atividades e guarda do equipamento:</p>
+            <ul class="info-list bullets">
+                <li>Verificar se não há documentos ou folhas esquecidas no equipamento;</li>
+                <li>Retirar documentos do vidro do scanner ou do alimentador automático;</li>
+                <li>Conferir se não há papel obstruído ou resíduos no equipamento;</li>
+                <li>Verificar se a bandeja de papel permanece organizada e abastecida, quando necessário;</li>
+                <li>Retirar documentos impressos da bandeja de saída;</li>
+                <li>Limpar externamente o equipamento com material adequado, evitando o uso de líquidos diretamente sobre a superfície;</li>
+                <li>Desligar o equipamento caso não haja previsão de utilização;</li>
+                <li>Registrar eventuais falhas, atolamentos ou necessidade de reposição de toner no controle do laboratório.</li>
+            </ul>
+        </section>
+
+        <section class="content-card">
+            <h3>7. Referências e Documentação</h3>
+            <ul class="info-list bullets">
+                <li>Manuais oficiais do produto: <a href="https://support.brother.com/g/b/manualtop.aspx?c=br&lang=pt&prod=mfc8952dw_us" class="link-ref" target="_blank">https://support.brother.com/g/b/manualtop.aspx?c=br&lang=pt&prod=mfc8952dw_us</a></li>
+                <li>Downloads de drivers e software: <a href="https://support.brother.com/g/b/downloadtop.aspx?c=br&lang=pt&prod=mfc8952dw_us" class="link-ref" target="_blank">https://support.brother.com/g/b/downloadtop.aspx?c=br&lang=pt&prod=mfc8952dw_us</a></li>
+                <li>Especificações técnicas completas: <a href="https://support.brother.com/g/b/spec.aspx?c=br&lang=pt&prod=mfc8952dw_us" class="link-ref" target="_blank">https://support.brother.com/g/b/spec.aspx?c=br&lang=pt&prod=mfc8952dw_us</a></li>
+                <li>Perguntas frequentes e solução de problemas: <a href="https://support.brother.com/g/b/faqtop.aspx?c=br&lang=pt&prod=mfc8952dw_us" class="link-ref" target="_blank">https://support.brother.com/g/b/faqtop.aspx?c=br&lang=pt&prod=mfc8952dw_us</a></li>
+            </ul>
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computadores - Alunos - Lab. Logística IFES</title>
+    <style>
+        :root {
+            /* Cores importadas do Index Original */
+            --cor1: #32A041; /* RGB: 50, 160, 65 - Maincolor */
+            --cor2: #64C878; /* RGB: 100, 200, 120 - Tom claro de maincolor */
+            --cor3: #1E7832; /* RGB: 30, 120, 50 - Tom escuro de maincolor */
+            --cor4: #46B45A; /* RGB: 70, 180, 90 - Tom vibrante de maincolor */
+            --cor5: #96DCA0; /* RGB: 150, 220, 160 - Tom pastel de maincolor */
+            --preto: #000000;
+            --branco: #FFFFFF;
+
+            /* Mapeamento de variáveis padrão do Index */
+            --primary-color: var(--cor1);
+            --secondary-color: var(--cor3);
+            --bg-light: #F8FAF0;
+            --text-dark: var(--preto);
+            --text-muted: #505050;
+            --border-color: #D2E8D5;
+            --sidebar-width: 280px;
+            
+            /* Cores de Status */
+            --status-operacional: var(--cor1);
+            --status-manutencao: rgb(230, 162, 0);
+            --status-inativo: rgb(180, 30, 30);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Barra Lateral (Menu Esquerdo) */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--branco);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cor1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            color: var(--cor3);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-category {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background-color: var(--cor5);
+            border: 1px solid transparent;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: var(--cor5);
+            color: var(--cor3);
+            border-color: var(--cor2);
+        }
+
+        /* Área de Conteúdo Principal */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 3rem 4rem;
+            flex: 1;
+            max-width: 1200px;
+        }
+
+	.header-section {
+            display: flex;
+            flex-direction: column; /* Força os elementos a ficarem um embaixo do outro */
+            align-items: flex-start; /* Alinha todos os elementos à esquerda */
+            gap: 0.5rem; /* Adiciona um respiro de espaço entre o título e o texto */
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--cor1);
+        }
+
+        h1 {
+            color: var(--cor3);
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;	
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            color: var(--branco);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .badge.operacional { background-color: var(--status-operacional); }
+        .badge.manutencao { background-color: var(--status-manutencao); }
+        .badge.inativo { background-color: var(--status-inativo); }
+
+        .content-card {
+            background-color: var(--branco);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .content-card h3 {
+            color: var(--cor3);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: bold;
+            color: var(--text-dark);
+            width: 35%;
+        }
+
+        td {
+            color: var(--text-muted);
+        }
+
+        /* Listas e Textos */
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .info-list {
+            list-style-position: inside;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-list.bullets li {
+            list-style-type: disc;
+        }
+
+        .info-list.numbers li {
+            list-style-type: decimal;
+        }
+
+        .bold-field {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        /* Links de Referência */
+        a.link-ref {
+            color: var(--cor3);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a.link-ref:hover {
+            text-decoration: underline;
+            color: var(--cor1);
+        }
+
+        /* Imagem */
+        .equipamento-img {
+            display: block;
+            max-width: 100%;
+            width: 350px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Rodapé de Controle */
+        .version-control {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logo-ifes {
+            max-width: 100%; /* Garante que a logo não ultrapasse a largura do menu lateral */
+            height: auto;    /* Mantém a proporção da imagem */
+            margin-bottom: 15px; /* Adiciona um respiro entre a logo e o título */
+            display: block;
+        }
+
+
+        /* Unidades identificadas (equipamentos com várias unidades) */
+        .unidades-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+        .unidade-chip { background-color: var(--bg-light); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.45rem 0.5rem; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--cor3); }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Lateral -->
+    <aside class="sidebar">
+        <img src="../figuras/ifes-horizontal-cor.png" alt="Logo Instituto Federal Espírito Santo" class="logo-ifes">
+        <div class="sidebar-header">
+            <h2>Laboratório de Logística</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html">🏠 Início / Visão Geral</a></li>
+
+            <div class="nav-category">Equipamentos e Hardware</div>
+            <li><a href="impressora.html">🖨️ Impressora</a></li>
+            <li><a href="impressora_3d.html">🖨️ Impressora 3D</a></li>
+            <li><a href="lousa_interativa.html">📺 Lousa Interativa</a></li>
+            <li><a href="oculos_vr.html">🥽 Óculos VR</a></li>
+            <li><a href="kit_lego.html">🧩 Kit LEGO</a></li>
+            <li><a href="kit_arduino.html">⚡ Kit Arduino</a></li>
+
+            <div class="nav-category">Informática</div>
+            <li><a href="computador_aluno.html" class="active">💻 PCs – Alunos</a></li>
+            <li><a href="computador_admin.html">🖥️ PCs – Administração</a></li>
+
+            <div class="nav-category">Jogos e Simulação</div>
+            <li><a href="milk_game.html">🥛 Milk Game</a></li>
+
+            <div class="nav-category">Apoio</div>
+            <li><a href="sobressalentes.html">📦 Itens Sobressalentes</a></li>
+        </ul>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+
+        <div class="header-section">
+            <h1>Computadores de Uso Discente <span class="badge operacional">OPERACIONAL</span></h1>
+            <span style="color: var(--text-muted);">Categoria: Estações de trabalho para atividades didáticas, simulações e uso de sistemas logísticos</span>
+        </div>
+
+        <section class="content-card">
+            <h3>Identificação Patrimonial</h3>
+            <table>
+                <tbody>
+                    <tr><th>Código Interno</th><td>PCE001 a PCE020</td></tr>
+                    <tr><th>Quantidade</th><td>20 unidades</td></tr>
+                    <tr><th>Endereço Físico</th><td>SLS – bancadas do Laboratório de Sistemas Logísticos</td></tr>
+                    <tr><th>Fornecedor</th><td>A confirmar</td></tr>
+                </tbody>
+            </table>
+            <p class="bold-field">Unidades identificadas:</p>
+            <div class="unidades-grid">
+                <div class="unidade-chip">PCE001</div><div class="unidade-chip">PCE002</div><div class="unidade-chip">PCE003</div><div class="unidade-chip">PCE004</div><div class="unidade-chip">PCE005</div>
+                <div class="unidade-chip">PCE006</div><div class="unidade-chip">PCE007</div><div class="unidade-chip">PCE008</div><div class="unidade-chip">PCE009</div><div class="unidade-chip">PCE010</div>
+                <div class="unidade-chip">PCE011</div><div class="unidade-chip">PCE012</div><div class="unidade-chip">PCE013</div><div class="unidade-chip">PCE014</div><div class="unidade-chip">PCE015</div>
+                <div class="unidade-chip">PCE016</div><div class="unidade-chip">PCE017</div><div class="unidade-chip">PCE018</div><div class="unidade-chip">PCE019</div><div class="unidade-chip">PCE020</div>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <h3>1. Descrição e Finalidade</h3>
+            <p>Os computadores de uso discente são estações de trabalho instaladas nas bancadas do Laboratório de Sistemas Logísticos e destinadas às atividades de ensino, pesquisa e extensão. O conjunto de 20 unidades permite a realização de aulas práticas com turmas completas, com uso de planilhas eletrônicas, softwares de simulação, sistemas de gestão e ferramentas de modelagem aplicadas à logística e à engenharia.</p>
+            <p>Cada máquina recebe um código individual (PCE001 a PCE020), afixado em etiqueta no gabinete, o que permite o registro de ocorrências e o acompanhamento da manutenção por unidade.</p>
+
+            <img src="../figuras/computador_aluno.jpeg" alt="Foto dos computadores de uso discente" class="equipamento-img" onerror="this.style.display='none'">
+        </section>
+
+        <section class="content-card">
+            <h3>2. Especificações Técnicas</h3>
+            <table>
+                <tbody>
+                    <tr><th>Tipo</th><td>Computador desktop</td></tr>
+                    <tr><th>Processador</th><td>Intel Core i5 ou equivalente</td></tr>
+                    <tr><th>Memória RAM</th><td>8 GB</td></tr>
+                    <tr><th>Armazenamento</th><td>SSD</td></tr>
+                    <tr><th>Sistema Operacional</th><td>Windows</td></tr>
+                    <tr><th>Periféricos</th><td>Monitor, teclado e mouse USB</td></tr>
+                    <tr><th>Conectividade</th><td>Rede cabeada institucional</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-card">
+            <h3>3. Guia Rápido de Operação</h3>
+
+            <p class="bold-field">Checklist pré-uso:</p>
+            <ul class="info-list bullets">
+                <li>Verificar se monitor, teclado e mouse estão conectados e em bom estado;</li>
+                <li>Conferir se a bancada está limpa e livre de líquidos ou alimentos;</li>
+                <li>Confirmar com o professor quais softwares e arquivos serão utilizados na atividade;</li>
+                <li>Ter em mãos o usuário e a senha institucionais.</li>
+            </ul>
+
+            <p class="bold-field">Cuidados:</p>
+            <ul class="info-list bullets">
+                <li>Não consumir alimentos ou bebidas nas bancadas;</li>
+                <li>Não instalar programas nem alterar configurações de rede, energia ou idioma;</li>
+                <li>Não salvar arquivos na área de trabalho ou em pastas locais, pois a máquina pode ser restaurada sem aviso;</li>
+                <li>Não desligar o computador pelo botão do gabinete, exceto em travamento total e com autorização do responsável;</li>
+                <li>Comunicar ao professor ou ao técnico qualquer travamento, mensagem de erro ou dano físico.</li>
+            </ul>
+
+            <p class="bold-field">Passo a passo:</p>
+            <ol class="info-list numbers">
+                <li><strong>Ligar:</strong> acionar o botão do gabinete e o monitor; aguardar a tela de login.</li>
+                <li><strong>Acessar:</strong> entrar com usuário e senha institucionais.</li>
+                <li><strong>Desenvolver a atividade:</strong> abrir os softwares indicados pelo professor.</li>
+                <li><strong>Salvar:</strong> gravar os arquivos no repositório indicado pelo professor, em nuvem institucional ou em mídia pessoal.</li>
+                <li><strong>Encerrar:</strong> fechar todos os programas, sair da conta e desligar pelo menu Iniciar → Desligar.</li>
+            </ol>
+        </section>
+
+        <section class="content-card">
+            <h3>4. Softwares Instalados</h3>
+            <p><span class="bold-field">Escritório:</span> editor de texto, planilha eletrônica e apresentações.</p>
+            <p><span class="bold-field">Navegação:</span> navegador web para acesso aos sistemas institucionais e ambientes virtuais de aprendizagem.</p>
+            <p><span class="bold-field">Disciplinas:</span> softwares de simulação, modelagem e desenho utilizados nas aulas do laboratório, conforme a imagem padrão definida pela TI do campus.</p>
+            <p><span class="bold-field">Novas instalações:</span> solicitar ao responsável pelo laboratório com antecedência mínima de 5 dias úteis.</p>
+        </section>
+
+        <section class="content-card">
+            <h3>5. Normas de Segurança e Cuidados</h3>
+            <p><span class="bold-field">EPIs necessários:</span> não se aplica.</p>
+            <p><span class="bold-field">Quem pode operar:</span> estudantes, professores e técnico de laboratório.</p>
+            <p><span class="bold-field">Restrições:</span> uso exclusivo para atividades acadêmicas; proibido o uso de dispositivos USB de origem desconhecida.</p>
+
+            <p class="bold-field" style="margin-top: 1rem;">Treinamento necessário:</p>
+            <ul style="list-style-type: none; padding-left: 0.5rem;">
+                <li>☑️ Nenhum</li>
+                <li>🔲 Básico</li>
+                <li>🔲 Intermediário</li>
+                <li>🔲 Operação exclusiva do técnico</li>
+            </ul>
+        </section>
+
+        <section class="content-card">
+            <h3>6. Manutenção e Conservação</h3>
+            <p><span class="bold-field">Limpeza:</span> com o equipamento desligado, limpar monitor, teclado e mouse com pano de microfibra seco ou levemente umedecido com álcool isopropílico. Nunca borrifar líquidos diretamente sobre os equipamentos.</p>
+            <p><span class="bold-field">Ventilação:</span> manter as saídas de ar do gabinete desobstruídas e livres de poeira.</p>
+            <p><span class="bold-field">Cabos e conexões:</span> verificar periodicamente o estado dos cabos de energia, rede e periféricos.</p>
+            <p><span class="bold-field">Falhas:</span> registrar a ocorrência informando o código da máquina (PCExxx) e abrir chamado na TI do campus; sinalizar a unidade como "em manutenção" até o atendimento.</p>
+        </section>
+
+        <section class="content-card">
+            <h3>7. Checklist Pós-Uso</h3>
+            <p>Antes de deixar a bancada, verifique:</p>
+            <ul class="info-list bullets">
+                <li>Arquivos salvos fora do computador (repositório, nuvem ou mídia pessoal);</li>
+                <li>Programas encerrados e sessão de usuário finalizada;</li>
+                <li>Computador desligado pelo menu Iniciar e monitor apagado;</li>
+                <li>Pen drives e fones de ouvido retirados;</li>
+                <li>Teclado, mouse e cadeira organizados;</li>
+                <li>Anormalidades comunicadas ao professor ou ao técnico, com o código da máquina.</li>
+            </ul>
+        </section>
+
+    </main>
+
+</body>
+</html>

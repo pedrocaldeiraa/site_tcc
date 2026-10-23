@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressora 3D - Lab. Logística IFES</title>
+    <style>
+        :root {
+            /* Cores importadas do Index Original */
+            --cor1: #32A041; /* RGB: 50, 160, 65 - Maincolor */
+            --cor2: #64C878; /* RGB: 100, 200, 120 - Tom claro de maincolor */
+            --cor3: #1E7832; /* RGB: 30, 120, 50 - Tom escuro de maincolor */
+            --cor4: #46B45A; /* RGB: 70, 180, 90 - Tom vibrante de maincolor */
+            --cor5: #96DCA0; /* RGB: 150, 220, 160 - Tom pastel de maincolor */
+            --preto: #000000;
+            --branco: #FFFFFF;
+
+            /* Mapeamento de variáveis padrão do Index */
+            --primary-color: var(--cor1);
+            --secondary-color: var(--cor3);
+            --bg-light: #F8FAF0;
+            --text-dark: var(--preto);
+            --text-muted: #505050;
+            --border-color: #D2E8D5;
+            --sidebar-width: 280px;
+            
+            /* Cores de Status */
+            --status-operacional: var(--cor1);
+            --status-manutencao: rgb(230, 162, 0);
+            --status-inativo: rgb(180, 30, 30);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Barra Lateral (Menu Esquerdo) */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--branco);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cor1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            color: var(--cor3);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-category {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background-color: var(--cor5);
+            border: 1px solid transparent;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: var(--cor5);
+            color: var(--cor3);
+            border-color: var(--cor2);
+        }
+
+        /* Área de Conteúdo Principal */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 3rem 4rem;
+            flex: 1;
+            max-width: 1200px;
+        }
+
+	.header-section {
+            display: flex;
+            flex-direction: column; /* Força os elementos a ficarem um embaixo do outro */
+            align-items: flex-start; /* Alinha todos os elementos à esquerda */
+            gap: 0.5rem; /* Adiciona um respiro de espaço entre o título e o texto */
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--cor1);
+        }
+
+        h1 {
+            color: var(--cor3);
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;	
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            color: var(--branco);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .badge.operacional { background-color: var(--status-operacional); }
+        .badge.manutencao { background-color: var(--status-manutencao); }
+        .badge.inativo { background-color: var(--status-inativo); }
+
+        .content-card {
+            background-color: var(--branco);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .content-card h3 {
+            color: var(--cor3);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: bold;
+            color: var(--text-dark);
+            width: 35%;
+        }
+
+        td {
+            color: var(--text-muted);
+        }
+
+        /* Listas e Textos */
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .info-list {
+            list-style-position: inside;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-list.bullets li {
+            list-style-type: disc;
+        }
+
+        .info-list.numbers li {
+            list-style-type: decimal;
+        }
+
+        .bold-field {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        /* Links de Referência */
+        a.link-ref {
+            color: var(--cor3);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a.link-ref:hover {
+            text-decoration: underline;
+            color: var(--cor1);
+        }
+
+        /* Imagem */
+        .equipamento-img {
+            display: block;
+            max-width: 100%;
+            width: 350px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Rodapé de Controle */
+        .version-control {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logo-ifes {
+            max-width: 100%; /* Garante que a logo não ultrapasse a largura do menu lateral */
+            height: auto;    /* Mantém a proporção da imagem */
+            margin-bottom: 15px; /* Adiciona um respiro entre a logo e o título */
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Barra Lateral -->
+    <aside class="sidebar">
+        <img src="../figuras/ifes-horizontal-cor.png" alt="Logo Instituto Federal Espírito Santo" class="logo-ifes">
+        <div class="sidebar-header">
+            <h2>Laboratório de Logística</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html">🏠 Início / Visão Geral</a></li>
+
+            <div class="nav-category">Equipamentos e Hardware</div>
+            <li><a href="impressora.html">🖨️ Impressora</a></li>
+            <li><a href="impressora_3d.html" class="active">🖨️ Impressora 3D</a></li>
+            <li><a href="lousa_interativa.html">📺 Lousa Interativa</a></li>
+            <li><a href="oculos_vr.html">🥽 Óculos VR</a></li>
+            <li><a href="kit_lego.html">🧩 Kit LEGO</a></li>
+            <li><a href="kit_arduino.html">⚡ Kit Arduino</a></li>
+
+            <div class="nav-category">Informática</div>
+            <li><a href="computador_aluno.html">💻 PCs – Alunos</a></li>
+            <li><a href="computador_admin.html">🖥️ PCs – Administração</a></li>
+
+            <div class="nav-category">Jogos e Simulação</div>
+            <li><a href="milk_game.html">🥛 Milk Game</a></li>
+
+            <div class="nav-category">Apoio</div>
+            <li><a href="sobressalentes.html">📦 Itens Sobressalentes</a></li>
+        </ul>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        
+        <div class="header-section">
+            <h1>Impressora 3D Creality K1 <span class="badge operacional">OPERACIONAL</span></h1>
+            <span style="color: var(--text-muted);">Categoria: Impressora 3D de tecnologia FDM para fabricação de protótipos e modelos tridimensionais</span>
+        </div>
+
+        <section class="content-card">
+            <h3>Identificação Patrimonial</h3>
+            <table>
+                <tbody>
+                    <tr><th>Código Interno</th><td>IMP3D001</td></tr>
+                    <tr><th>Endereço Físico</th><td>ARMB2</td></tr>
+                    <tr><th>Fornecedor</th><td>Creality</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-card">
+            <h3>1. Descrição e Finalidade</h3>
+            <p>A Creality K1 é uma impressora 3D de tecnologia FDM (Fused Deposition Modeling) destinada à fabricação de objetos tridimensionais a partir de modelos digitais. O equipamento realiza a deposição sucessiva de material termoplástico, permitindo a produção de protótipos, modelos, peças funcionais e componentes personalizados. No Laboratório de Logística, o equipamento pode ser empregado em atividades práticas relacionadas à prototipagem, desenvolvimento de produtos, modelagem tridimensional, processos de fabricação, automação e desenvolvimento de soluções aplicadas à logística e à engenharia.</p>
+            
+            <img src="../figuras/creality_k1.jpeg" alt="Foto da Impressora 3D Creality K1" class="equipamento-img">
+        </section>
+
+        <section class="content-card">
+            <h3>2. Especificações Técnicas</h3>
+            <table>
+                <tbody>
+                    <tr><th>Marca / Modelo</th><td>Creality / K1</td></tr>
+                    <tr><th>Tipo</th><td>Impressora 3D de tecnologia FDM (Fused Deposition Modeling)</td></tr>
+                    <tr><th>Tecnologia de impressão</th><td>FDM, com sistema de movimentação CoreXY</td></tr>
+                    <tr><th>Volume de impressão</th><td>220 × 220 × 250 mm</td></tr>
+                    <tr><th>Velocidade máxima de impressão</th><td>Até 600 mm/s</td></tr>
+                    <tr><th>Aceleração máxima</th><td>Até 20.000 mm/s²</td></tr>
+                    <tr><th>Precisão de impressão</th><td>100 ± 0,1 mm</td></tr>
+                    <tr><th>Altura de camada</th><td>0,1 a 0,35 mm</td></tr>
+                    <tr><th>Diâmetro do filamento</th><td>1,75 mm</td></tr>
+                    <tr><th>Diâmetro do bico</th><td>0,4 mm</td></tr>
+                    <tr><th>Temperatura máxima do bico</th><td>300 °C</td></tr>
+                    <tr><th>Temperatura máxima da mesa</th><td>100 °C</td></tr>
+                    <tr><th>Extrusora</th><td>Extrusora de acionamento direto com engrenagem dupla</td></tr>
+                    <tr><th>Nivelamento</th><td>Autonivelamento automático</td></tr>
+                    <tr><th>Superfície de impressão</th><td>Plataforma de construção flexível</td></tr>
+                    <tr><th>Filamentos compatíveis</th><td>PLA, PETG, PET, TPU, PA, ABS, ASA, PC, PLA-CF e PA-CF</td></tr>
+                    <tr><th>Interface</th><td>Tela colorida sensível ao toque de 4,3"</td></tr>
+                    <tr><th>Conectividade</th><td>USB e Wi-Fi</td></tr>
+                    <tr><th>Transferência de arquivos</th><td>Unidade USB, rede local (LAN) e Creality Cloud</td></tr>
+                    <tr><th>Formato de impressão</th><td>G-code</td></tr>
+                    <tr><th>Software de fatiamento</th><td>Creality Print, com compatibilidade com Cura, PrusaSlicer e Simplify3D</td></tr>
+                    <tr><th>Recursos de operação</th><td>Recuperação após perda de energia, detecção de falta de filamento e ajuste de vibração (Input Shaping)</td></tr>
+                    <tr><th>Alimentação elétrica</th><td>100–120 V / 200–240 V, 50/60 Hz</td></tr>
+                    <tr><th>Potência nominal</th><td>350 W</td></tr>
+                    <tr><th>Dimensões do equipamento</th><td>Aproximadamente 355 × 355 × 355 mm</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-card">
+            <h3>3. Guia Rápido de Operação</h3>
+            
+            <p class="bold-field">Checklist pré-uso:</p>
+            <ul class="info-list bullets">
+                <li>Verificar se o cabo de alimentação está devidamente conectado e a tensão adequada;</li>
+                <li>Garantir que a mesa de impressão (plataforma flexível) esteja limpa e livre de resíduos de impressões anteriores;</li>
+                <li>Verificar a quantidade e o tipo de filamento no carretel (PLA, PETG, etc.);</li>
+                <li>Conferir se o tubo de teflon e o tracionador do extrusor estão desobstruídos;</li>
+                <li>Confirmar se há conexão com a rede Wi-Fi do laboratório ou se o pendrive USB está disponível;</li>
+                <li>Verificar se as portas e a tampa superior da impressora (enclosure) estão devidamente posicionadas, dependendo do material a ser impresso.</li>
+            </ul>
+
+            <p class="bold-field">Cuidados:</p>
+            <ul class="info-list bullets">
+                <li>PERIGO DE QUEIMADURA: Não tocar no bico extrusor (hotend) ou na mesa de aquecimento durante ou imediatamente após a operação;</li>
+                <li>Manter as portas fechadas durante a impressão de materiais que exigem ambiente controlado e emitem odores (como ABS);</li>
+                <li>Não forçar a remoção da peça da mesa. Aguardar o resfriamento para facilitar o desprendimento natural;</li>
+                <li>Evitar o uso de espátulas metálicas afiadas que possam arranhar ou rasgar o revestimento da manta magnética flexível;</li>
+                <li>Desligar o equipamento imediatamente em caso de odores estranhos de queimado, fumaça ou ruídos mecânicos anormais;</li>
+                <li>Manter ferramentas, líquidos e materiais inflamáveis afastados da área de impressão.</li>
+            </ul>
+
+            <p class="bold-field">Passo a passo:</p>
+            <ol class="info-list numbers">
+                <li><strong>Preparação:</strong> Ligar a impressora no interruptor traseiro e aguardar a inicialização do sistema na tela touch.</li>
+                <li><strong>Alimentação do Filamento:</strong> Inserir a ponta do filamento no sensor de quebra, guiar através do tubo de teflon até o extrusor. No painel touch, usar a função "Extrude"(Extrusão) para aquecer o bico e purgar o filamento antigo até que a nova cor saia limpa.</li>
+                <li><strong>Fatiamento (Computador):</strong> Abrir o software Creality Print no computador. Importar o modelo 3D (.stl ou .obj), escolher o perfil do material (ex: PLA), configurar parâmetros (preenchimento, suportes) e clicar em "Slice"(Fatiar) para gerar o arquivo G-code.</li>
+                <li><strong>Transferência:</strong> Enviar o arquivo G-code para a impressora via rede Wi-Fi/LAN ou salvar no pendrive e inseri-lo na porta USB frontal da máquina.</li>
+                <li><strong>Iniciar Impressão:</strong> No painel touch da impressora, navegar até os arquivos locais ou USB, selecionar o arquivo desejado e iniciar a impressão. A máquina fará o auto-nivelamento antes de começar.</li>
+                <li><strong>Monitoramento Inicial:</strong> Acompanhar a impressão da primeira camada para garantir que o filamento está aderindo perfeitamente à mesa.</li>
+                <li><strong>Conclusão e Retirada:</strong> Aguardar o fim da impressão e o resfriamento da mesa (abaixo de 40°C). Retirar a plataforma flexível e curvá-la levemente para soltar a peça com segurança.</li>
+                <li><strong>Encerramento:</strong> Limpar qualquer resíduo restante na mesa, recolocar a plataforma no lugar e desligar o equipamento, caso não haja mais impressões programadas.</li>
+            </ol>
+        </section>
+
+        <section class="content-card">
+            <h3>4. Software de Programação</h3>
+            <p><span class="bold-field">Software utilizado:</span> Creality Print (compatível também com UltiMaker Cura e OrcaSlicer).</p>
+            <p><span class="bold-field">Função:</span> Preparação e fatiamento de modelos 3D (.stl, .obj), configuração de parâmetros de impressão e geração do arquivo de código de máquina (G-code).</p>
+            <p><span class="bold-field">Programação:</span> Interface gráfica de fatiamento (Slicer) e manipulação de G-code.</p>
+            <p><span class="bold-field">Conexão com a Impressora:</span> Rede Local (Wi-Fi/LAN), Creality Cloud ou via Pendrive USB.</p>
+            <p><span class="bold-field">Dispositivo de utilização:</span> Computador do laboratório.</p>
+            <p><span class="bold-field">Acesso:</span> <a href="https://www.creality.com/pages/download-software" class="link-ref" target="_blank">https://www.creality.com/pages/download-software</a></p>
+        </section>
+
+        <section class="content-card">
+            <h3>5. Manutenção e Conservação</h3>
+            
+            <p class="bold-field">Componentes Mecânicos e Estruturais</p>
+            <ul class="info-list bullets">
+                <li>Limpar os eixos de movimentação (CoreXY) periodicamente com um pano macio e seco;</li>
+                <li>Verificar a tensão das correias e ajustá-las se necessário, evitando folgas ou desgaste prematuro;</li>
+                <li>Lubrificar o fuso do eixo Z com graxa apropriada a cada 300 horas de impressão ou quando houver ruído excessivo;</li>
+                <li>Evitar bater ou forçar a movimentação mecânica do cabeçote com a máquina ligada.</li>
+            </ul>
+
+            <p class="bold-field">Mesa de Impressão e Extrusor</p>
+            <ul class="info-list bullets">
+                <li>Limpar a mesa (plataforma flexível) com álcool isopropílico (99%) antes e após o uso para garantir aderência;</li>
+                <li>Inspecionar o bico (nozzle) quanto a entupimentos e limpar externamente com escova de cerdas de latão (apenas com o bico aquecido);</li>
+                <li>Trocar o tubo de teflon e/ou o bico extrusor em caso de degradação visível ou falhas constantes de extrusão.</li>
+            </ul>
+
+            <p class="bold-field">Armazenamento de Filamentos</p>
+            <ul class="info-list bullets">
+                <li>Guardar rolos de filamento não utilizados em embalagens seladas com sílica gel ou em caixas secadoras (drybox);</li>
+                <li>Evitar deixar filamentos higroscópicos (PETG, ABS, TPU) expostos ao ar ambiente do laboratório por longos períodos.</li>
+            </ul>
+        </section>
+
+        <section class="content-card">
+            <h3>6. Checklist Pós-Uso</h3>
+            <p>Para o encerramento das atividades e guarda do equipamento:</p>
+            <ul class="info-list bullets">
+                <li>Aguardar o resfriamento completo do bico extrusor (abaixo de 50°C) e da mesa de impressão;</li>
+                <li>Retirar a peça impressa com cuidado, encurvando levemente a plataforma magnética;</li>
+                <li>Remover resíduos de filamento da mesa (linhas de purga, skirt, brim ou suportes);</li>
+                <li>Limpar a superfície da mesa com álcool isopropílico;</li>
+                <li>Retrair e remover o filamento caso a impressora vá ficar inativa por um longo período, armazenando-o de forma adequada;</li>
+                <li>Retirar o pendrive USB, caso tenha sido utilizado, e apagar arquivos temporários antigos da memória, se aplicável;</li>
+                <li>Fechar as portas de vidro e a tampa superior para evitar o acúmulo de poeira no interior;</li>
+                <li>Desligar a impressora no botão traseiro e desconectar da tomada;</li>
+                <li>Registrar no livro de controle do laboratório: tempo de uso estimado, material utilizado e eventuais ocorrências ou falhas durante a impressão.</li>
+            </ul>
+        </section>
+
+        <section class="content-card">
+            <h3>7. Referências e Documentação</h3>
+            <ul class="info-list bullets">
+                <li>Página oficial do produto (Creality K1): <a href="https://www.creality.com/products/creality-k1-3d-printer" class="link-ref" target="_blank">https://www.creality.com/products/creality-k1-3d-printer</a></li>
+                <li>Guias rápidos, Manuais e Wiki de Manutenção: <a href="https://wiki.creality.com/en/k1-flagship-series/k1" class="link-ref" target="_blank">https://wiki.creality.com/en/k1-flagship-series/k1</a></li>
+                <li>Download do Software Creality Print: <a href="https://www.creality.com/pages/download-creality-k1" class="link-ref" target="_blank">https://www.creality.com/pages/download-creality-k1</a></li>
+                <li>Banco de modelos 3D recomendados para calibração: <a href="https://www.thingiverse.com/" class="link-ref" target="_blank">https://www.thingiverse.com/</a> ou <a href="https://www.printables.com/" class="link-ref" target="_blank">https://www.printables.com/</a></li>
+            </ul>
+        </section>
+
+    </main>
+
+</body>
+</html>
